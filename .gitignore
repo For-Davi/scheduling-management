@@ -1,0 +1,18 @@
+# Ambiente
+.env
+
+# Docker volumes
+mysql_data/
+
+# Dependências geradas
+backend/vendor/
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

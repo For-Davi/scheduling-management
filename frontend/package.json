@@ -1,0 +1,40 @@
+{
+  "name": "agendapro-frontend",
+  "version": "0.1.0",
+  "description": "AgendaPro - Sistema de Agendamento SaaS",
+  "scripts": {
+    "dev": "quasar dev --hostname 0.0.0.0",
+    "build": "quasar build",
+    "lint": "eslint --ext .js,.vue ./src"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.16.12",
+    "axios": "^1.7.9",
+    "pinia": "^2.3.1",
+    "quasar": "^2.17.4",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@quasar/app-vite": "^1.10.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "vite": "^6.0.11"
+  },
+  "engines": {
+    "node": ">= 18.0.0",
+    "npm": ">= 6.13.4"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ]
+}

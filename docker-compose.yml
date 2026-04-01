@@ -1,0 +1,93 @@
+services:
+
+  # ─── Backend (Laravel) ────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    container_name: agendapro_backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    environment:
+      - APP_ENV=local
+      - APP_KEY=
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=agendapro
+      - DB_USERNAME=agendapro
+      - DB_PASSWORD=secret
+      - STRIPE_KEY=${STRIPE_KEY}
+      - STRIPE_SECRET=${STRIPE_SECRET}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - agendapro
+
+  # ─── Frontend (Vue 3 + Quasar) ────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    container_name: agendapro_frontend
+    command: npm run dev
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "9000:9000"
+    networks:
+      - agendapro
+
+  # ─── MySQL 8 ──────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: agendapro_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: agendapro
+      MYSQL_USER: agendapro
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agendapro
+
+  # ─── phpMyAdmin (opcional, para inspecionar o banco) ──────────────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: agendapro_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: agendapro
+      PMA_PASSWORD: secret
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - agendapro
+
+volumes:
+  mysql_data:
+
+networks:
+  agendapro:
+    driver: bridge
