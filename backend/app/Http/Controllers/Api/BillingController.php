@@ -12,6 +12,67 @@ class BillingController extends Controller
     public function __construct(private BillingService $billing) {}
 
     /**
+     * GET /api/billing
+     * Retorna informações da assinatura atual da empresa.
+     */
+    public function info(Request $request): JsonResponse
+    {
+        $company = $request->user()->company;
+
+        return response()->json([
+            'plan'             => $company->plan,
+            'next_billing_date' => $company->subscription_ends_at?->toIso8601String(),
+            'expiring_soon'    => $company->subscription_expiring_soon,
+            'active_employees' => $company->activeEmployees()->count(),
+            'plan_limits'      => \App\Models\Company::PLAN_LIMITS[$company->plan] ?? null,
+        ]);
+    }
+
+    /**
+     * POST /api/billing/plan
+     * Muda o plano da empresa (free → paid: checkout; paid → paid: swap; paid → free: cancela).
+     */
+    public function changePlan(Request $request): JsonResponse
+    {
+        $request->validate(['plan' => 'required|in:free,basic,advanced']);
+
+        $company = $request->user()->company;
+        $newPlan = $request->plan;
+
+        if ($newPlan === 'free') {
+            if ($company->subscribed('default')) {
+                $company->subscription('default')->cancel();
+            }
+            $company->update([
+                'plan'                 => 'free',
+                'subscription_ends_at' => null,
+            ]);
+        } elseif ($company->subscribed('default')) {
+            $priceId = $newPlan === 'basic'
+                ? env('STRIPE_PRICE_BASIC')
+                : env('STRIPE_PRICE_ADVANCED');
+
+            $company->subscription('default')->swap($priceId);
+            $company->update(['plan' => $newPlan]);
+        } else {
+            $frontendUrl = rtrim(env('FRONTEND_URL', 'http://localhost:9000'), '/');
+            $url = $this->billing->checkoutUrl(
+                $company,
+                $newPlan,
+                "{$frontendUrl}/admin/billing?success=1",
+                "{$frontendUrl}/admin/billing"
+            );
+
+            return response()->json(['checkout_url' => $url]);
+        }
+
+        return response()->json([
+            'plan'              => $company->plan,
+            'next_billing_date' => $company->subscription_ends_at?->toIso8601String(),
+        ]);
+    }
+
+    /**
      * POST /api/billing/checkout
      * Cria sessão Stripe Checkout para nova assinatura.
      * Retorna a URL para redirecionar o usuário.

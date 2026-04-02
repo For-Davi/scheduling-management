@@ -24,12 +24,12 @@
           </q-input>
 
           <q-input
-            v-model="form.business_name"
+            v-model="form.company_name"
             label="Nome do negócio"
             outlined
-            :error="!!errors.business_name"
-            :error-message="errors.business_name"
-            @update:model-value="errors.business_name = ''"
+            :error="!!errors.company_name"
+            :error-message="errors.company_name"
+            @update:model-value="errors.company_name = ''"
           >
             <template #prepend>
               <q-icon name="store" />
@@ -149,7 +149,7 @@ const showPasswordConfirm = ref(false)
 
 const form = reactive({
   name: "",
-  business_name: "",
+  company_name: "",
   email: "",
   password: "",
   password_confirmation: "",
@@ -158,7 +158,7 @@ const form = reactive({
 
 const errors = reactive({
   name: "",
-  business_name: "",
+  company_name: "",
   email: "",
   password: "",
   password_confirmation: "",
@@ -172,8 +172,8 @@ function validate() {
     errors.name = "Nome é obrigatório."
     valid = false
   }
-  if (!form.business_name.trim()) {
-    errors.business_name = "Nome do negócio é obrigatório."
+  if (!form.company_name.trim()) {
+    errors.company_name = "Nome do negócio é obrigatório."
     valid = false
   }
   if (!form.email.trim()) {
@@ -203,7 +203,7 @@ async function submit() {
   try {
     await auth.register({
       name: form.name,
-      business_name: form.business_name,
+      company_name: form.company_name,
       email: form.email,
       password: form.password,
       password_confirmation: form.password_confirmation,

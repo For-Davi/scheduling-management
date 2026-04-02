@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BillingController;
 use App\Http\Controllers\Api\BusinessHoursController;
@@ -60,11 +61,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('blocked-days', [BusinessHoursController::class, 'storeBlockedDay']);
     Route::delete('blocked-days/{blockedDay}', [BusinessHoursController::class, 'destroyBlockedDay']);
 
+    // Agendamentos
+    Route::get('appointments', [AppointmentController::class, 'index']);
+    Route::get('appointments/my', [AppointmentController::class, 'myAppointments']);
+    Route::patch('appointments/{appointment}/status', [AppointmentController::class, 'updateStatus']);
+
     // Dashboard (somente admin)
     Route::get('dashboard/metrics', [DashboardController::class, 'metrics'])->middleware('role:admin');
 
     // Billing / Assinatura (somente admin)
     Route::middleware('role:admin')->group(function () {
+        Route::get('billing', [BillingController::class, 'info']);
+        Route::post('billing/plan', [BillingController::class, 'changePlan']);
         Route::post('billing/checkout', [BillingController::class, 'checkout']);
         Route::get('billing/portal', [BillingController::class, 'portal']);
     });
