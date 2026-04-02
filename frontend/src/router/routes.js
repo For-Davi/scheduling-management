@@ -10,6 +10,8 @@ const routes = [
     children: [
       { path: "login", component: () => import("src/pages/auth/Login.vue"), name: "login" },
       { path: "register", component: () => import("src/pages/auth/Register.vue"), name: "register" },
+      { path: "forgot-password", component: () => import("src/pages/auth/ForgotPassword.vue"), name: "forgot-password" },
+      { path: "reset-password", component: () => import("src/pages/auth/ResetPassword.vue"), name: "reset-password" },
     ],
   },
   {

@@ -10,6 +10,13 @@ export const useAuthStore = defineStore("auth", () => {
   const isAdmin = computed(() => user.value?.role === "admin");
   const isEmployee = computed(() => user.value?.role === "employee");
 
+  async function register(payload) {
+    const { data } = await api.post("/auth/register", payload);
+    token.value = data.token;
+    user.value = data.user;
+    localStorage.setItem("token", data.token);
+  }
+
   async function login(credentials) {
     const { data } = await api.post("/auth/login", credentials);
     token.value = data.token;
@@ -30,5 +37,13 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.removeItem("token");
   }
 
-  return { token, user, isAuthenticated, isAdmin, isEmployee, login, fetchUser, logout };
+  async function forgotPassword(email) {
+    await api.post("/auth/forgot-password", { email });
+  }
+
+  async function resetPassword(payload) {
+    await api.post("/auth/reset-password", payload);
+  }
+
+  return { token, user, isAuthenticated, isAdmin, isEmployee, register, login, fetchUser, logout, forgotPassword, resetPassword };
 });
