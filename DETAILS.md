@@ -352,10 +352,10 @@ docker compose exec backend php artisan key:generate
 8. [x] Autenticação (Sanctum) + Registro de empresa
 9. [x] CRUD de Serviços com trava de plano
 10. [x] CRUD de Funcionários + vínculo de competências
-11. [ ] Configuração de horários e buffer time
-12. [ ] Lógica de disponibilidade (`AvailabilityService`)
-13. [ ] Link público de agendamento
-14. [ ] Integração Stripe (Cashier + Webhooks)
-15. [ ] Dashboard com métricas
-16. [ ] Job de alerta de expiração
-17. [ ] Landing Page
+11. [x] Configuração de horários e buffer time
+12. [x] Lógica de disponibilidade (`AvailabilityService`)
+13. [x] Link público de agendamento
+14. [x] Integração Stripe (Cashier + Webhooks)
+15. [x] Dashboard com métricas
+16. [x] Job de alerta de expiração
+17. [x] Landing Page

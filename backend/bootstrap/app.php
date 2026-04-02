@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Middleware\EnsureRole;
+use App\Jobs\CheckSubscriptionExpirationJob;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Console\Scheduling\Schedule;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withSchedule(function (Schedule $schedule): void {
+        // Verifica diariamente quais empresas têm assinatura expirando em ≤ 7 dias
+        $schedule->job(new CheckSubscriptionExpirationJob)->daily();
+    })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => EnsureRole::class,

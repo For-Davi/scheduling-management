@@ -19,6 +19,7 @@ class Company extends Model
         'trial_ends_at',
         'subscription_ends_at',
         'subscription_expiring_soon',
+        'buffer_time_minutes',
         'stripe_id',
         'pm_type',
         'pm_last_four',
@@ -30,6 +31,7 @@ class Company extends Model
             'trial_ends_at' => 'datetime',
             'subscription_ends_at' => 'datetime',
             'subscription_expiring_soon' => 'boolean',
+            'buffer_time_minutes' => 'integer',
         ];
     }
 
@@ -58,6 +60,11 @@ class Company extends Model
     public function businessHours(): HasMany
     {
         return $this->hasMany(BusinessHour::class);
+    }
+
+    public function blockedDays(): HasMany
+    {
+        return $this->hasMany(BlockedDay::class);
     }
 
     public function appointments(): HasMany
