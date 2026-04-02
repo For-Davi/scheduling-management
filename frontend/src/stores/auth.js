@@ -45,5 +45,20 @@ export const useAuthStore = defineStore("auth", () => {
     await api.post("/auth/reset-password", payload);
   }
 
-  return { token, user, isAuthenticated, isAdmin, isEmployee, register, login, fetchUser, logout, forgotPassword, resetPassword };
+  async function updateProfile(payload) {
+    const { data } = await api.put("/auth/profile", payload);
+    user.value = { ...user.value, name: data.user.name, email: data.user.email };
+    return data;
+  }
+
+  async function updateCompany(payload) {
+    const { data } = await api.put("/auth/company", payload);
+    user.value = {
+      ...user.value,
+      company: { ...user.value.company, name: data.company.name, slug: data.company.slug },
+    };
+    return data;
+  }
+
+  return { token, user, isAuthenticated, isAdmin, isEmployee, register, login, fetchUser, logout, forgotPassword, resetPassword, updateProfile, updateCompany };
 });

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\UpdateCompanyRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Services\AuthService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
@@ -83,6 +85,50 @@ class AuthController extends Controller
                 'trial_ends_at' => $user->company->trial_ends_at,
                 'subscription_ends_at' => $user->company->subscription_ends_at,
                 'subscription_expiring_soon' => $user->company->subscription_expiring_soon,
+            ],
+        ]);
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        $data = $request->validated();
+
+        $user->name  = $data['name'];
+        $user->email = $data['email'];
+
+        if (!empty($data['password'])) {
+            $user->password = $data['password'];
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Perfil atualizado com sucesso.',
+            'user' => [
+                'id'    => $user->id,
+                'name'  => $user->name,
+                'email' => $user->email,
+                'role'  => $user->role,
+            ],
+        ]);
+    }
+
+    public function updateCompany(UpdateCompanyRequest $request): JsonResponse
+    {
+        $company = $request->user()->company;
+        $data    = $request->validated();
+
+        $company->name = $data['name'];
+        $company->slug = $data['slug'];
+        $company->save();
+
+        return response()->json([
+            'message' => 'Dados da organização atualizados com sucesso.',
+            'company' => [
+                'id'   => $company->id,
+                'name' => $company->name,
+                'slug' => $company->slug,
             ],
         ]);
     }
