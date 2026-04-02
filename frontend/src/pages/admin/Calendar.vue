@@ -2,7 +2,7 @@
   <q-page class="q-pa-md" style="max-width: 1200px; margin: 0 auto">
 
     <!-- Cabeçalho -->
-    <div class="row items-center justify-between q-mb-md">
+    <div class="row items-center justify-between q-mb-lg">
       <div>
         <div class="text-h5 text-weight-bold">Agenda</div>
         <div class="text-caption text-grey">Todos os agendamentos da empresa</div>
