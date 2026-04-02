@@ -5,14 +5,12 @@ const routes = [
     name: "landing",
   },
   {
-    path: "/login",
-    component: () => import("src/pages/auth/Login.vue"),
-    name: "login",
-  },
-  {
-    path: "/register",
-    component: () => import("src/pages/auth/Register.vue"),
-    name: "register",
+    path: "/auth",
+    component: () => import("src/layouts/AuthLayout.vue"),
+    children: [
+      { path: "login", component: () => import("src/pages/auth/Login.vue"), name: "login" },
+      { path: "register", component: () => import("src/pages/auth/Register.vue"), name: "register" },
+    ],
   },
   {
     path: "/admin",
